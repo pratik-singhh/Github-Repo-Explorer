@@ -6,15 +6,20 @@ export function useRepositories(query: string, page: number): { repositories: Re
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   useEffect(() => {
+    const abort = new AbortController();
     async function fetchRepositories() {
+      setRepositories([]);
       setLoading(true);
       setError(false);
 
       try {
-        setRepositories(await searchRepositories(query, page));
+        setRepositories(await searchRepositories(query, page, abort.signal));
       } catch (error) {
-        console.error(error);
-        setError(true);
+        if (error instanceof Error && error.name !== 'AbortError') {
+
+          console.error(error);
+          setError(true);
+        }
       }
       finally {
         setLoading(false);
@@ -30,6 +35,7 @@ export function useRepositories(query: string, page: number): { repositories: Re
     }, 500);
     return (() => {
       clearTimeout(debouncer);
+      abort.abort();
     })
 
   }, [query, page])

@@ -1,19 +1,33 @@
 import type { Repository } from "../types/Repository";
-export async function searchRepositories(query: string, page: number): Promise<Repository[]> {
+export async function searchRepositories(query: string, page: number, abort: AbortSignal): Promise<Repository[]> {
   const searchUrl = `https://api.github.com/search/repositories?q=${query}&page=${page}&per_page=10
 `;
 
-  const unparsedData = await fetch(searchUrl);
+
+  const unparsedData = await fetch(searchUrl, { signal: abort });
   const parsedData = await unparsedData.json();
-  console.log(parsedData);
   // try again after api reset.
 
-  const fetchedRepo: Repository;
-  fetchedRepo.language
-  fetchedRepo.description
-  fetchedRepo.url
-  fetchedRepo.name
-  fetchedRepo.stars
+  if (parsedData.items) {
+
+
+    let fetchedRepo: Repository[] = parsedData.items.map((element) => {
+
+
+      return {
+        language: element.language || "Unknown",
+        description: element.description || "",
+        url: element.html_url,
+        name: element.name,
+        stars: element.stargazers_count,
+      }
+
+    })
+    return fetchedRepo;
+  }
+  else {
+    return [];
+  }
 
 
 };

@@ -73,7 +73,7 @@ function Home() {
         (!loading && !error && query !== "" && repositories.length === 0) &&
         <h1 className="text-red-400">No repositories found for {query}.</h1>
       }
-      {(!loading && !error && repositories.length > 0) &&
+      {(!error && repositories.length > 0) &&
 
         <div className="flex justify-center gap-8 text-blue-800">
 
@@ -83,6 +83,7 @@ function Home() {
               onClick={() => {
                 setPage((p) => p - 1)
               }}
+              disabled={loading}
             >Prev</button>
           }
           <span>{page}</span>
@@ -91,6 +92,8 @@ function Home() {
             onClick={() => {
               setPage((p) => p + 1)
             }}
+
+            disabled={loading}
           >Next</button>
 
         </div>
