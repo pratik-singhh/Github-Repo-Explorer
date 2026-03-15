@@ -8,8 +8,10 @@ function RepoCard({ repo }: Props) {
 
       <h1 className="text-lg">{repo.name}</h1>
       <h1 className="text-sm">{repo.description}</h1>
-      <h1 className="text-sm">{repo.stars}</h1>
+      <h1 className="text-sm">{repo.stars}⭐</h1>
       <h1 className="text-sm">{repo.language}</h1>
+      <a href={repo.url} rel="noopener noreferrer" target="_blank" className="text-sm text-blue-800 cursor-pointer">View on GitHub →</a>
+
     </div>
   )
 }

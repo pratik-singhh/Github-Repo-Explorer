@@ -1,6 +1,7 @@
 export type Repository = {
   name: string,
   description: string,
-  stars: string,
+  stars: number,
   language: string,
+  url: string;
 }

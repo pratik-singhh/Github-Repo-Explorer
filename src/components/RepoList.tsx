@@ -1,40 +1,12 @@
 import RepoCard from "./RepoCard"
 import type { Repository } from "../types/Repository";
-function RepoList() {
-  const exInfo: Repository[] = [
-    {
-      name: "Movie",
-      description: "Book",
-      stars: "****",
-      language: "eng",
-
-    },
-    {
-      name: "Food",
-      description: "Order",
-      stars: "***",
-      language: "eng",
-
-    },
-    {
-      name: "Game",
-      description: "Play",
-      stars: "*****",
-      language: "hin",
-
-    },
-    {
-      name: "Song",
-      description: "Listen",
-      stars: "*****",
-      language: "eng",
-
-    },
-
-  ];
+type Props = {
+  repositories: Repository[]
+}
+function RepoList({ repositories }: Props) {
   return (
-    <div className="flex m-4 gap-3 justify-center ">
-      {exInfo.map((element) =>
+    <div className=" flex flex-col m-4 gap-3 justify-center ">
+      {repositories.map((element) =>
 
         <RepoCard
           key={element.name}
