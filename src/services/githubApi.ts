@@ -1,3 +1,11 @@
+type GitHubRepository = {
+  language: string
+  description: string
+  html_url: string
+  name: string
+  stargazers_count: number
+
+}
 import type { Repository } from "../types/Repository";
 export async function searchRepositories(query: string, page: number, abort: AbortSignal): Promise<Repository[]> {
   const searchUrl = `https://api.github.com/search/repositories?q=${query}&page=${page}&per_page=10
@@ -11,7 +19,7 @@ export async function searchRepositories(query: string, page: number, abort: Abo
   if (parsedData.items) {
 
 
-    let fetchedRepo: Repository[] = parsedData.items.map((element) => {
+    let fetchedRepo: Repository[] = parsedData.items.map((element: GitHubRepository) => {
 
 
       return {
