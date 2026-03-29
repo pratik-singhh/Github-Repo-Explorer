@@ -30,76 +30,96 @@ function Home() {
 
 
   return (
-    <div>
+    <div className="space-y-12">
+      <header className="text-center space-y-4">
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          GitWatcher
+        </h1>
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          Explore the world's most popular repositories. Just enter a name to get started.
+        </p>
+      </header>
 
-      <h1 className="flex justify-center text-2xl mt-5 text-rose-600">Github Repository Explorer</h1>
-      <SearchBar query={query} updateQuery={updateQuery} />
-      {query !== "" &&
-        <h3 className="flex justify-center mt-5 text-md font-bold">Searching For : "{query}"</h3>
-      }
-
-      <div className="flex my-4 justify-between items-center">
-
-        {(!loading && repositories.length > 0 && !error && query !== "") &&
-          <SearchSummary length={repositories.length} query={query} />
-        }
-
-        {(!loading && repositories.length > 0 && !error && query !== "") &&
-          <select name="" value={sortOption} onChange={(e) => {
-            setSortOption(e.target.value);
-          }} className="mr-10 min-w-fit text-right justify-center flex  border-2" id="">
-            <option value="name"  >Sort By Name</option>
-            <option value="stars"  >Sort By Stars</option>
-          </select>
-        }
+      <div className="max-w-2xl mx-auto">
+        <SearchBar query={query} updateQuery={updateQuery} />
       </div>
 
+      <div className="space-y-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="order-2 sm:order-1">
+            {(!loading && repositories.length > 0 && !error && query !== "") &&
+              <SearchSummary length={repositories.length} query={query} />
+            }
+          </div>
 
-      {
-        (loading) &&
-        <h1 className="text-green-400">Loading...</h1>
-      }
-      {
-        (error) &&
-
-        <h1 className="text-red-400">Error: Could not fetch repository.</h1>
-      }
-      {
-        (!loading && !error && repositories.length > 0) &&
-
-        <RepoList repositories={sortedRepositories} />
-      }
-      {
-        (!loading && !error && query !== "" && repositories.length === 0) &&
-        <h1 className="text-red-400">No repositories found for {query}.</h1>
-      }
-      {(!error && repositories.length > 0) &&
-
-        <div className="flex justify-center gap-8 text-blue-800">
-
-          {(page > 1) &&
-            <button
-              className="hover:underline cursor-pointer"
-              onClick={() => {
-                setPage((p) => p - 1)
-              }}
-              disabled={loading}
-            >Prev</button>
-          }
-          <span>{page}</span>
-          <button
-            className="hover:underline cursor-pointer"
-            onClick={() => {
-              setPage((p) => p + 1)
-            }}
-
-            disabled={loading}
-          >Next</button>
-
+          <div className="order-1 sm:order-2 w-full sm:w-auto">
+            {(!loading && repositories.length > 0 && !error && query !== "") &&
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-slate-500 whitespace-nowrap">Sort by</span>
+                <select 
+                  value={sortOption} 
+                  onChange={(e) => setSortOption(e.target.value)} 
+                  className="w-full sm:w-auto pl-3 pr-10 py-2 text-sm border border-slate-200 rounded-lg bg-white hover:border-slate-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="stars">Most Stars</option>
+                  <option value="name">Repository Name</option>
+                </select>
+              </div>
+            }
+          </div>
         </div>
-      }
 
-    </div >
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <div className="w-10 h-10 border-4 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin"></div>
+            <p className="text-slate-500 font-medium tracking-wide">Fetching repositories...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+            <p className="text-red-700 font-medium">Error: Could not fetch repositories. Please try again later.</p>
+          </div>
+        )}
+
+        {(!loading && !error && repositories.length > 0) && (
+          <RepoList repositories={sortedRepositories} />
+        )}
+
+        {(!loading && !error && query !== "" && repositories.length === 0) && (
+          <div className="text-center py-20">
+            <p className="text-slate-500 text-lg">No repositories found for "{query}".</p>
+          </div>
+        )}
+
+        {(!error && repositories.length > 0) && (
+          <div className="flex items-center justify-center gap-6 pt-8 border-t border-slate-200">
+            <button
+              className={`p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all ${page === 1 ? 'invisible' : ''}`}
+              onClick={() => setPage((p) => p - 1)}
+              disabled={loading}
+              title="Previous Page"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-slate-500 uppercase tracking-widest">Page</span>
+              <span className="text-lg font-bold text-slate-900">{page}</span>
+            </div>
+
+            <button
+              className="p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              onClick={() => setPage((p) => p + 1)}
+              disabled={loading}
+              title="Next Page"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 
